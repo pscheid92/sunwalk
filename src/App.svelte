@@ -1,49 +1,5 @@
 <script lang="ts">
-    import * as SunCalc from 'suncalc';
-
-    interface Times {
-        astronomicalDawn: Date;
-        nauticalDawn: Date;
-        civilDawn: Date;
-        sunriseStart: Date;
-        sunriseEnd: Date;
-        goldenHourEnd: Date;
-
-        solarNoon: Date;
-
-        goldenHourStart: Date;
-        sunsetStart: Date;
-        sunsetEnd: Date;
-        civilDusk: Date;
-        nauticalDusk: Date;
-        astronomicalDusk: Date;
-
-        nadir: Date;
-    }
-
-    function calculateTimes(latitude: number, longitude: number, date: Date): Times {
-        const times = SunCalc.getTimes(date, latitude, longitude);
-
-        return {
-            astronomicalDawn: times.nightEnd,
-            nauticalDawn: times.nauticalDawn,
-            civilDawn: times.dawn,
-            sunriseStart: times.sunrise,
-            sunriseEnd: times.sunriseEnd,
-            goldenHourEnd: times.goldenHourEnd,
-
-            solarNoon: times.solarNoon,
-
-            goldenHourStart: times.goldenHour,
-            sunsetStart: times.sunsetStart,
-            sunsetEnd: times.sunset,
-            civilDusk: times.dusk,
-            nauticalDusk: times.nauticalDusk,
-            astronomicalDusk: times.night,
-
-            nadir: times.nadir,
-        };
-    }
+    import {calculateTimes} from "./lib/sunwalk";
 
     function formatDate(date: Date): String {
         const locale = "de-DE";
@@ -65,43 +21,72 @@
         return date.toLocaleTimeString(locale, options);
     }
 
-    const today = new Date();
-    const times = calculateTimes(48.06191466693093, 11.687986444166285, today);
+    const place = "Riemerling";
+    const lat = 48.06191466693093;
+    const lng = 11.687986444166285;
+
+    let date = $state(new Date());
+    let times = $derived(calculateTimes(lat, lng, date));
+
+    function nextDay() {
+        date = new Date(date.getTime() + 86400000);
+    }
+
+    function previousDay() {
+        date = new Date(date.getTime() - 86400000);
+    }
+
+    function pickDay(event: { currentTarget: HTMLInputElement }) {
+        const target = event.currentTarget;
+        if (target.value === "") {
+            target.value = date.toISOString().slice(0, 10);
+            return;
+        }
+
+        date = new Date(target.value);
+    }
 </script>
 
 <main>
-    <h2>Riemerling</h2>
-    <h2>{formatDate(today)}</h2>
+    <h2>{place}</h2>
+
+    <div>
+        <input type="date" value={date.toISOString().slice(0, 10)} onchange={pickDay} required/>
+        <div>
+            <button onclick={previousDay}>Gestern</button>
+            <button onclick={nextDay}>Morgen</button>
+        </div>
+    </div>
 
     <div>
         <h3>Morgens</h3>
 
         <table>
             <tbody>
-            <tr>
-                <td>Astronomische Dämmerung</td>
-                <td>{formatTime(times.astronomicalDawn)}</td>
-            </tr>
-            <tr>
-                <td>Nautische Dämmerung</td>
-                <td>{formatTime(times.nauticalDawn)}</td>
-            </tr>
-            <tr>
-                <td>Zivile Dämmerung</td>
-                <td>{formatTime(times.civilDawn)}</td>
-            </tr>
-            <tr>
-                <td>Sonnenaufgang</td>
-                <td>{formatTime(times.sunriseStart)}</td>
-            </tr>
-            <tr>
-                <td>Goldene Stunde</td>
-                <td>{formatTime(times.sunriseEnd)}</td>
-            </tr>
-            <tr>
-                <td>Tag</td>
-                <td>{formatTime(times.goldenHourEnd)}</td>
-            </tr>
+                <tr>
+                    <td>Astronomische Dämmerung</td>
+                    <td>{formatTime(times.astronomicalDawn)}</td>
+                </tr>
+                <tr>
+                    <td>Nautische Dämmerung</td>
+                    <td>{formatTime(times.nauticalDawn)}</td>
+                </tr>
+                <tr>
+                    <td>Zivile Dämmerung</td>
+                    <td>{formatTime(times.civilDawn)}</td>
+                </tr>
+                <tr>
+                    <td>Sonnenaufgang</td>
+                    <td>{formatTime(times.sunriseStart)}</td>
+                </tr>
+                <tr>
+                    <td>Goldene Stunde</td>
+                    <td>{formatTime(times.sunriseEnd)}</td>
+                </tr>
+                <tr>
+                    <td>Tag</td>
+                    <td>{formatTime(times.goldenHourEnd)}</td>
+                </tr>
             </tbody>
         </table>
     </div>
@@ -111,30 +96,30 @@
 
         <table>
             <tbody>
-            <tr>
-                <td>Goldene Stunde</td>
-                <td>{formatTime(times.goldenHourStart)}</td>
-            </tr>
-            <tr>
-                <td>Sonnenuntergang</td>
-                <td>{formatTime(times.sunsetStart)}</td>
-            </tr>
-            <tr>
-                <td>Zivile Dämmerung</td>
-                <td>{formatTime(times.sunsetEnd)}</td>
-            </tr>
-            <tr>
-                <td>Nautische Dämmerung</td>
-                <td>{formatTime(times.civilDusk)}</td>
-            </tr>
-            <tr>
-                <td>Astronomische Dämmerung</td>
-                <td>{formatTime(times.nauticalDusk)}</td>
-            </tr>
-            <tr>
-                <td>Nacht</td>
-                <td>{formatTime(times.astronomicalDusk)}</td>
-            </tr>
+                <tr>
+                    <td>Goldene Stunde</td>
+                    <td>{formatTime(times.goldenHourStart)}</td>
+                </tr>
+                <tr>
+                    <td>Sonnenuntergang</td>
+                    <td>{formatTime(times.sunsetStart)}</td>
+                </tr>
+                <tr>
+                    <td>Zivile Dämmerung</td>
+                    <td>{formatTime(times.sunsetEnd)}</td>
+                </tr>
+                <tr>
+                    <td>Nautische Dämmerung</td>
+                    <td>{formatTime(times.civilDusk)}</td>
+                </tr>
+                <tr>
+                    <td>Astronomische Dämmerung</td>
+                    <td>{formatTime(times.nauticalDusk)}</td>
+                </tr>
+                <tr>
+                    <td>Nacht</td>
+                    <td>{formatTime(times.astronomicalDusk)}</td>
+                </tr>
             </tbody>
         </table>
     </div>
@@ -150,5 +135,4 @@
         text-align: right;
         padding-right: 1rem;
     }
-
 </style>
