@@ -1,5 +1,7 @@
 <script lang="ts">
     import {search, type Place} from "../lib/photon";
+    import { Input, Spinner } from 'flowbite-svelte';
+    import { SearchSolid, MapPinAltSolid } from 'flowbite-svelte-icons';
 
     interface Props {
         onSelect: (place: Place) => void;
@@ -57,97 +59,42 @@
     }
 </script>
 
-<div class="search-container">
-    <input
-        type="text"
+<div class="relative w-full">
+    <Input
+        type="search"
         placeholder="Ort suchen..."
         value={query}
         oninput={handleInput}
         onblur={handleBlur}
         onfocus={() => showResults = query.length >= 2}
-    />
+        size="lg"
+    >
+        <SearchSolid slot="left" class="w-5 h-5 text-gray-500" />
+    </Input>
 
     {#if showResults && (results.length > 0 || isSearching)}
-        <div class="results-dropdown">
+        <div class="absolute top-full left-0 right-0 mt-2 bg-white border border-gray-200 rounded-lg shadow-xl max-h-80 overflow-y-auto z-50">
             {#if isSearching}
-                <div class="result-item loading">Suche...</div>
+                <div class="flex items-center gap-3 px-4 py-4 text-gray-500">
+                    <Spinner size="4" color="orange" />
+                    <span class="text-sm">Suche läuft...</span>
+                </div>
             {:else}
                 {#each results as place, index (index)}
                     <button
-                        class="result-item"
+                        class="w-full text-left px-4 py-3 hover:bg-gradient-to-r hover:from-orange-50 hover:to-amber-50 border-b border-gray-100 last:border-b-0 transition-all focus:outline-none focus:bg-gradient-to-r focus:from-orange-50 focus:to-amber-50 group"
                         onclick={() => selectPlace(place)}
                     >
-                        <div class="result-name">{place.displayName}</div>
-                        <div class="result-context">{place.context}</div>
+                        <div class="flex items-start gap-3">
+                            <MapPinAltSolid class="w-4 h-4 text-orange-500 mt-1 flex-shrink-0 group-hover:scale-110 transition-transform" />
+                            <div class="flex-1 min-w-0">
+                                <div class="font-medium text-gray-900 group-hover:text-orange-700 transition-colors">{place.displayName}</div>
+                                <div class="text-sm text-gray-600 mt-0.5 truncate">{place.context}</div>
+                            </div>
+                        </div>
                     </button>
                 {/each}
             {/if}
         </div>
     {/if}
 </div>
-
-<style>
-    .search-container {
-        position: relative;
-        width: 100%;
-    }
-
-    input {
-        width: 100%;
-        padding: 0.5rem;
-        font-size: 1rem;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        box-sizing: border-box;
-    }
-
-    input:focus {
-        outline: none;
-        border-color: #4a90e2;
-    }
-
-    .results-dropdown {
-        position: absolute;
-        top: 100%;
-        left: 0;
-        right: 0;
-        background: white;
-        border: 1px solid #ccc;
-        border-top: none;
-        border-radius: 0 0 4px 4px;
-        max-height: 300px;
-        overflow-y: auto;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        z-index: 1000;
-    }
-
-    .result-item {
-        width: 100%;
-        padding: 0.75rem;
-        text-align: left;
-        border: none;
-        background: white;
-        cursor: pointer;
-        border-bottom: 1px solid #f0f0f0;
-        display: block;
-    }
-
-    .result-item:hover {
-        background-color: #f5f5f5;
-    }
-
-    .result-item.loading {
-        cursor: default;
-        color: #999;
-    }
-
-    .result-name {
-        font-weight: 500;
-        margin-bottom: 0.25rem;
-    }
-
-    .result-context {
-        font-size: 0.85rem;
-        color: #666;
-    }
-</style>
