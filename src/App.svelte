@@ -1,6 +1,8 @@
 <script lang="ts">
     import {calculateTimes} from "./lib/sunwalk";
     import {getLocation} from "./lib/location";
+    import SearchBox from "./components/SearchBox.svelte";
+    import type {Place} from "./lib/photon";
 
     function formatTime(date: Date): String {
         const locale = "de-DE";
@@ -21,6 +23,12 @@
         lat = location.latitude;
         lng = location.longitude;
         place = "Mein Standort";
+    }
+
+    function handlePlaceSelect(selectedPlace: Place) {
+        place = selectedPlace.name;
+        lat = selectedPlace.lat;
+        lng = selectedPlace.lon;
     }
 
     let date = $state(new Date());
@@ -48,6 +56,8 @@
 <main>
     <strong>{place}</strong>
     <p>({lat}°, {lng}°)</p>
+
+    <SearchBox onSelect={handlePlaceSelect} />
     <button onclick={getMyLocation}>Standort bestimmen</button>
     <hr/>
 
