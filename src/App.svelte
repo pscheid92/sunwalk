@@ -14,10 +14,11 @@
         return date.toLocaleTimeString(locale, options);
     }
 
-    let place = $state("Riemerling");
-    let lat = $state(48.06191466693093);
-    let lng = $state(11.687986444166285);
+    let place = $state("Deutschland");
+    let lat = $state(51.1657);
+    let lng = $state(10.4515);
     let searchQuery = $state("");
+    let hasAttemptedGeolocation = $state(false);
 
     async function getMyLocation() {
         let location = await getLocation();
@@ -37,6 +38,17 @@
             place = "Mein Standort";
         }
     }
+
+    // Automatically attempt to get user's location on page load
+    $effect(() => {
+        if (!hasAttemptedGeolocation) {
+            hasAttemptedGeolocation = true;
+            getMyLocation().catch((error) => {
+                console.log("Geolocation not available, using Germany as fallback:", error);
+                // Keep the Germany default values
+            });
+        }
+    });
 
     function handlePlaceSelect(selectedPlace: Place) {
         place = selectedPlace.name;
