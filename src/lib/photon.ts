@@ -104,11 +104,11 @@ function toPlace(feature: PhotonFeature): Place {
 
 function determineName(props: PhotonProperties): string {
     return props.name
-        || props.city
-        || props.town
-        || props.village
-        || props.suburb
         || props.district
+        || props.suburb
+        || props.village
+        || props.town
+        || props.city
         || props.street
         || "Unbenannt";
 }

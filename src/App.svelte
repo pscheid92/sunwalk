@@ -2,7 +2,7 @@
     import {calculateTimes} from "./lib/sunwalk";
     import {getLocation} from "./lib/location";
     import SearchBox from "./components/SearchBox.svelte";
-    import type {Place} from "./lib/photon";
+    import {reverse, type Place} from "./lib/photon";
 
     function formatTime(date: Date): String {
         const locale = "de-DE";
@@ -17,12 +17,25 @@
     let place = $state("Riemerling");
     let lat = $state(48.06191466693093);
     let lng = $state(11.687986444166285);
+    let searchQuery = $state("");
 
     async function getMyLocation() {
         let location = await getLocation();
         lat = location.latitude;
         lng = location.longitude;
-        place = "Mein Standort";
+        searchQuery = "";
+
+        try {
+            const places = await reverse(lat, lng, {limit: 1});
+            if (places.length > 0) {
+                place = places[0].name;
+            } else {
+                place = "Mein Standort";
+            }
+        } catch (error) {
+            console.error("Reverse geocoding error:", error);
+            place = "Mein Standort";
+        }
     }
 
     function handlePlaceSelect(selectedPlace: Place) {
@@ -57,7 +70,7 @@
     <strong>{place}</strong>
     <p>({lat}°, {lng}°)</p>
 
-    <SearchBox onSelect={handlePlaceSelect} />
+    <SearchBox bind:query={searchQuery} onSelect={handlePlaceSelect} />
     <button onclick={getMyLocation}>Standort bestimmen</button>
     <hr/>
 

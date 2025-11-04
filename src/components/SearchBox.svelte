@@ -3,11 +3,10 @@
 
     interface Props {
         onSelect: (place: Place) => void;
+        query?: string;
     }
 
-    let {onSelect}: Props = $props();
-
-    let query = $state("");
+    let {onSelect, query = $bindable("")}: Props = $props();
     let results = $state<Place[]>([]);
     let isSearching = $state(false);
     let showResults = $state(false);
