@@ -1,9 +1,7 @@
-import { Clock, Eye, Moon, Sun } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import DateSelector from "./components/DateSelector";
-import LocationCard from "./components/LocationCard";
-import TimeEntry from "./components/TimeEntry";
-import TimesCard from "./components/TimesCard";
+import HeroTimes from "./components/HeroTimes";
+import TimesPanel from "./components/TimesPanel";
+import TopBar from "./components/TopBar";
 import { getLocation } from "./lib/location";
 import { type Place, reverse } from "./lib/photon";
 import { calculateTimes } from "./lib/sunwalk";
@@ -80,138 +78,33 @@ export default function App() {
     }, [getMyLocation]);
 
     return (
-        <div className="min-h-screen bg-gray-100">
-            {/* Hero Header */}
-            <header className="bg-gradient-to-r from-orange-500 via-amber-500 to-orange-600 text-white">
-                <div className="w-full max-w-4xl mx-auto px-4 sm:px-6 md:px-8 lg:px-12 py-6 sm:py-8">
-                    <div className="flex items-center gap-2 sm:gap-3 mb-2">
-                        <Sun className="w-6 h-6 sm:w-8 sm:h-8" />
-                        <h1 className="text-2xl sm:text-3xl font-bold">Sunwalk</h1>
-                    </div>
-                    <p className="text-orange-100 text-xs sm:text-sm">
-                        Sonnenzeiten für Fotografen und Outdoor-Enthusiasten
-                    </p>
-                </div>
-            </header>
-
-            <main className="w-full max-w-4xl mx-auto px-4 sm:px-6 md:px-8 lg:px-12 py-4 sm:py-6 md:py-8 space-y-4 sm:space-y-6">
-                {/* Location */}
-                <LocationCard
+        <div className="min-h-screen bg-slate-950 text-slate-200">
+            <div className="w-full max-w-3xl mx-auto px-4">
+                <TopBar
                     place={place}
-                    lat={lat}
-                    lng={lng}
+                    date={date}
                     searchQuery={searchQuery}
                     onSearchQueryChange={setSearchQuery}
                     onPlaceSelect={handlePlaceSelect}
                     onLocationClick={getMyLocation}
                     isLocating={isLocating}
+                    onDateChange={setDate}
+                    onPreviousDay={previousDay}
+                    onNextDay={nextDay}
                 />
 
-                {/* Date Selector */}
-                <DateSelector date={date} onDateChange={setDate} onPreviousDay={previousDay} onNextDay={nextDay} />
+                <HeroTimes
+                    sunrise={formatTime(times.sunriseStart)}
+                    solarNoon={formatTime(times.solarNoon)}
+                    sunset={formatTime(times.sunsetStart)}
+                    goldenHourMorningEnd={formatTime(times.sunriseEnd)}
+                    goldenHourEveningStart={formatTime(times.goldenHourStart)}
+                />
 
-                {/* Morning Times */}
-                <TimesCard
-                    title="Morgens"
-                    icon={Sun}
-                    iconGradient="bg-gradient-to-br from-amber-400 to-orange-500"
-                    borderColor="border-orange-200"
-                >
-                    <TimeEntry
-                        icon={Moon}
-                        iconColor="text-indigo-500"
-                        label="Astronomische Dämmerung"
-                        time={formatTime(times.astronomicalDawn)}
-                    />
-                    <TimeEntry
-                        icon={Moon}
-                        iconColor="text-blue-500"
-                        label="Nautische Dämmerung"
-                        time={formatTime(times.nauticalDawn)}
-                    />
-                    <TimeEntry
-                        icon={Eye}
-                        iconColor="text-cyan-500"
-                        label="Zivile Dämmerung"
-                        time={formatTime(times.civilDawn)}
-                    />
-                    <TimeEntry
-                        icon={Sun}
-                        iconColor="text-orange-500"
-                        label="Sonnenaufgang"
-                        time={formatTime(times.sunriseStart)}
-                        highlighted={true}
-                        backgroundColor="bg-gradient-to-r from-orange-50 to-amber-50"
-                    />
-                    <TimeEntry
-                        icon={Sun}
-                        iconColor="text-yellow-500"
-                        label="Goldene Stunde"
-                        time={formatTime(times.sunriseEnd)}
-                        backgroundColor="bg-gradient-to-r from-yellow-50 to-orange-50"
-                    />
-                    <TimeEntry
-                        icon={Clock}
-                        iconColor="text-gray-400"
-                        label="Tag"
-                        time={formatTime(times.goldenHourEnd)}
-                    />
-                </TimesCard>
+                <TimesPanel times={times} formatTime={formatTime} />
 
-                {/* Evening Times */}
-                <TimesCard
-                    title="Abends"
-                    icon={Moon}
-                    iconGradient="bg-gradient-to-br from-orange-500 to-pink-500"
-                    borderColor="border-blue-200"
-                >
-                    <TimeEntry
-                        icon={Sun}
-                        iconColor="text-yellow-500"
-                        label="Goldene Stunde"
-                        time={formatTime(times.goldenHourStart)}
-                        backgroundColor="bg-gradient-to-r from-yellow-50 to-orange-50"
-                    />
-                    <TimeEntry
-                        icon={Sun}
-                        iconColor="text-orange-500"
-                        label="Sonnenuntergang"
-                        time={formatTime(times.sunsetStart)}
-                        highlighted={true}
-                        backgroundColor="bg-gradient-to-r from-orange-50 to-pink-50"
-                    />
-                    <TimeEntry
-                        icon={Eye}
-                        iconColor="text-cyan-500"
-                        label="Zivile Dämmerung"
-                        time={formatTime(times.sunsetEnd)}
-                    />
-                    <TimeEntry
-                        icon={Moon}
-                        iconColor="text-blue-500"
-                        label="Nautische Dämmerung"
-                        time={formatTime(times.civilDusk)}
-                    />
-                    <TimeEntry
-                        icon={Moon}
-                        iconColor="text-indigo-500"
-                        label="Astronomische Dämmerung"
-                        time={formatTime(times.nauticalDusk)}
-                    />
-                    <TimeEntry
-                        icon={Moon}
-                        iconColor="text-indigo-600"
-                        label="Nacht"
-                        time={formatTime(times.astronomicalDusk)}
-                        backgroundColor="bg-gradient-to-r from-indigo-50 to-blue-50"
-                    />
-                </TimesCard>
-
-                {/* Footer */}
-                <footer className="text-center py-8 text-sm text-gray-500">
-                    <p>Berechnet mit SunCalc &bull; Geo-Daten von Photon API</p>
-                </footer>
-            </main>
+                <footer className="text-center py-6 text-xs text-slate-600">SunCalc &bull; Photon API</footer>
+            </div>
         </div>
     );
 }

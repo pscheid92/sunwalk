@@ -63,7 +63,7 @@ export default function SearchBox({ query, onQueryChange, onSelect }: SearchBoxP
         <div className="relative w-full">
             <div className="relative">
                 <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                    <Search className="w-5 h-5 text-gray-500" />
+                    <Search className="w-4 h-4 text-slate-500" />
                 </div>
                 <input
                     type="search"
@@ -72,16 +72,16 @@ export default function SearchBox({ query, onQueryChange, onSelect }: SearchBoxP
                     onChange={handleInput}
                     onBlur={handleBlur}
                     onFocus={() => setShowResults(query.length >= 2)}
-                    className="block w-full p-3 pl-10 text-base text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-primary-500 focus:border-primary-500"
+                    className="block w-full py-2 pl-9 pr-3 text-sm text-slate-200 border border-slate-700 rounded-lg bg-slate-900 focus:ring-amber-500 focus:border-amber-500 placeholder-slate-500"
                 />
             </div>
 
             {showResults && (results.length > 0 || isSearching) && (
-                <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-gray-200 rounded-lg shadow-xl max-h-80 overflow-y-auto z-50">
+                <div className="absolute top-full left-0 right-0 mt-1 bg-slate-800 border border-slate-700 rounded-lg shadow-xl max-h-80 overflow-y-auto z-50">
                     {isSearching ? (
-                        <div className="flex items-center gap-3 px-4 py-4 text-gray-500">
+                        <div className="flex items-center gap-3 px-4 py-3 text-slate-400">
                             <svg
-                                className="animate-spin h-4 w-4 text-orange-500"
+                                className="animate-spin h-4 w-4 text-amber-500"
                                 xmlns="http://www.w3.org/2000/svg"
                                 fill="none"
                                 viewBox="0 0 24 24"
@@ -108,16 +108,14 @@ export default function SearchBox({ query, onQueryChange, onSelect }: SearchBoxP
                             <button
                                 key={place.displayName}
                                 type="button"
-                                className="w-full text-left px-4 py-3 hover:bg-gradient-to-r hover:from-orange-50 hover:to-amber-50 border-b border-gray-100 last:border-b-0 transition-all focus:outline-none focus:bg-gradient-to-r focus:from-orange-50 focus:to-amber-50 group"
+                                className="w-full text-left px-4 py-2.5 hover:bg-slate-700 border-b border-slate-700 last:border-b-0 transition-colors focus:outline-none focus:bg-slate-700"
                                 onMouseDown={() => selectPlace(place)}
                             >
                                 <div className="flex items-start gap-3">
-                                    <MapPin className="w-4 h-4 text-orange-500 mt-1 flex-shrink-0 group-hover:scale-110 transition-transform" />
+                                    <MapPin className="w-4 h-4 text-amber-500 mt-0.5 flex-shrink-0" />
                                     <div className="flex-1 min-w-0">
-                                        <div className="font-medium text-gray-900 group-hover:text-orange-700 transition-colors">
-                                            {place.displayName}
-                                        </div>
-                                        <div className="text-sm text-gray-600 mt-0.5 truncate">{place.context}</div>
+                                        <div className="text-sm font-medium text-slate-200">{place.displayName}</div>
+                                        <div className="text-xs text-slate-500 mt-0.5 truncate">{place.context}</div>
                                     </div>
                                 </div>
                             </button>
