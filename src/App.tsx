@@ -1,5 +1,5 @@
 import { Clock, Eye, Moon, Sun } from "lucide-react";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import DateSelector from "./components/DateSelector";
 import LocationCard from "./components/LocationCard";
 import TimeEntry from "./components/TimeEntry";
@@ -7,6 +7,7 @@ import TimesCard from "./components/TimesCard";
 import { getLocation } from "./lib/location";
 import { type Place, reverse } from "./lib/photon";
 import { calculateTimes } from "./lib/sunwalk";
+import { getTimezoneLocation } from "./lib/timezone";
 
 function formatTime(date: Date): string {
     return date.toLocaleTimeString("de-DE", {
@@ -16,27 +17,35 @@ function formatTime(date: Date): string {
     });
 }
 
+let initialLocation = getTimezoneLocation();
+
 export default function App() {
-    let [place, setPlace] = useState("Deutschland");
-    let [lat, setLat] = useState(51.1657);
-    let [lng, setLng] = useState(10.4515);
+    let [place, setPlace] = useState(initialLocation.place);
+    let [lat, setLat] = useState(initialLocation.lat);
+    let [lng, setLng] = useState(initialLocation.lng);
     let [searchQuery, setSearchQuery] = useState("");
     let [date, setDate] = useState(new Date());
+    let [isLocating, setIsLocating] = useState(false);
 
     let times = useMemo(() => calculateTimes(lat, lng, date), [lat, lng, date]);
 
     let getMyLocation = useCallback(async () => {
-        let location = await getLocation();
-        setLat(location.latitude);
-        setLng(location.longitude);
-        setSearchQuery("");
-
+        setIsLocating(true);
         try {
-            let places = await reverse(location.latitude, location.longitude, { limit: 1 });
-            setPlace(places.length > 0 ? places[0].name : "Mein Standort");
-        } catch (error) {
-            console.error("Reverse geocoding error:", error);
-            setPlace("Mein Standort");
+            let location = await getLocation();
+            setLat(location.latitude);
+            setLng(location.longitude);
+            setSearchQuery("");
+
+            try {
+                let places = await reverse(location.latitude, location.longitude, { limit: 1 });
+                setPlace(places.length > 0 ? places[0].name : "Mein Standort");
+            } catch (error) {
+                console.error("Reverse geocoding error:", error);
+                setPlace("Mein Standort");
+            }
+        } finally {
+            setIsLocating(false);
         }
     }, []);
 
@@ -62,10 +71,12 @@ export default function App() {
         });
     }, []);
 
+    let hasAttemptedGeolocation = useRef(false);
     useEffect(() => {
-        getMyLocation().catch((error) => {
-            console.log("Geolocation not available, using Germany as fallback:", error);
-        });
+        if (hasAttemptedGeolocation.current) return;
+        hasAttemptedGeolocation.current = true;
+
+        getMyLocation().catch(() => {});
     }, [getMyLocation]);
 
     return (
@@ -93,6 +104,7 @@ export default function App() {
                     onSearchQueryChange={setSearchQuery}
                     onPlaceSelect={handlePlaceSelect}
                     onLocationClick={getMyLocation}
+                    isLocating={isLocating}
                 />
 
                 {/* Date Selector */}

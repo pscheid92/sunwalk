@@ -1,4 +1,4 @@
-import { MapPin } from "lucide-react";
+import { Loader2, MapPin } from "lucide-react";
 import type { Place } from "../lib/photon";
 import SearchBox from "./SearchBox";
 
@@ -10,6 +10,7 @@ interface LocationCardProps {
     onSearchQueryChange: (query: string) => void;
     onPlaceSelect: (place: Place) => void;
     onLocationClick: () => void;
+    isLocating: boolean;
 }
 
 export default function LocationCard({
@@ -19,7 +20,8 @@ export default function LocationCard({
     searchQuery,
     onSearchQueryChange,
     onPlaceSelect,
-    onLocationClick
+    onLocationClick,
+    isLocating
 }: LocationCardProps) {
     return (
         <div className="rounded-lg shadow-lg border-2 border-gray-200 bg-white p-4 sm:p-6">
@@ -41,11 +43,16 @@ export default function LocationCard({
                 <SearchBox query={searchQuery} onQueryChange={onSearchQueryChange} onSelect={onPlaceSelect} />
                 <button
                     type="button"
-                    className="w-full inline-flex items-center justify-center px-5 py-2.5 text-sm font-medium text-white bg-primary-600 rounded-lg shadow-lg hover:shadow-xl hover:bg-primary-700 transition-shadow"
+                    className="w-full inline-flex items-center justify-center px-5 py-2.5 text-sm font-medium text-white bg-orange-600 rounded-lg shadow-lg hover:shadow-xl hover:bg-orange-700 transition-shadow cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                     onClick={onLocationClick}
+                    disabled={isLocating}
                 >
-                    <MapPin className="w-4 h-4 mr-2" />
-                    Standort bestimmen
+                    {isLocating ? (
+                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    ) : (
+                        <MapPin className="w-4 h-4 mr-2" />
+                    )}
+                    {isLocating ? "Standort wird bestimmt..." : "Standort bestimmen"}
                 </button>
             </div>
         </div>
