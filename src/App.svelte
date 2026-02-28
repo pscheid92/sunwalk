@@ -1,79 +1,78 @@
 <script lang="ts">
-    import "./app.css";
-    import { calculateTimes } from "./lib/sunwalk";
-    import { getLocation } from "./lib/location";
-    import { reverse, type Place } from "./lib/photon";
-    import { SunSolid, MoonSolid, EyeSolid, ClockSolid } from 'flowbite-svelte-icons';
+import "./app.css";
+import { ClockSolid, EyeSolid, MoonSolid, SunSolid } from "flowbite-svelte-icons";
+import DateSelector from "./components/DateSelector.svelte";
+import LocationCard from "./components/LocationCard.svelte";
+import TimeEntry from "./components/TimeEntry.svelte";
+import TimesCard from "./components/TimesCard.svelte";
+import { getLocation } from "./lib/location";
+import { type Place, reverse } from "./lib/photon";
+import { calculateTimes } from "./lib/sunwalk";
 
-    import LocationCard from "./components/LocationCard.svelte";
-    import DateSelector from "./components/DateSelector.svelte";
-    import TimesCard from "./components/TimesCard.svelte";
-    import TimeEntry from "./components/TimeEntry.svelte";
+// Utility functions
+function formatTime(date: Date): string {
+    return date.toLocaleTimeString("de-DE", {
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false
+    });
+}
 
-    // Utility functions
-    function formatTime(date: Date): string {
-        return date.toLocaleTimeString("de-DE", {
-            hour: "2-digit",
-            minute: "2-digit",
-            hour12: false
+// Location state
+let place = $state("Deutschland");
+let lat = $state(51.1657);
+let lng = $state(10.4515);
+let searchQuery = $state("");
+let hasAttemptedGeolocation = $state(false);
+
+// Date state
+let date = $state(new Date());
+let times = $derived(calculateTimes(lat, lng, date));
+
+// Location handlers
+async function getMyLocation() {
+    const location = await getLocation();
+    lat = location.latitude;
+    lng = location.longitude;
+    searchQuery = "";
+
+    try {
+        const places = await reverse(lat, lng, { limit: 1 });
+        place = places.length > 0 ? places[0].name : "Mein Standort";
+    } catch (error) {
+        console.error("Reverse geocoding error:", error);
+        place = "Mein Standort";
+    }
+}
+
+function handlePlaceSelect(selectedPlace: Place) {
+    place = selectedPlace.name;
+    lat = selectedPlace.lat;
+    lng = selectedPlace.lon;
+}
+
+// Auto-geolocate on page load
+$effect(() => {
+    if (!hasAttemptedGeolocation) {
+        hasAttemptedGeolocation = true;
+        getMyLocation().catch((error) => {
+            console.log("Geolocation not available, using Germany as fallback:", error);
         });
     }
+});
 
-    // Location state
-    let place = $state("Deutschland");
-    let lat = $state(51.1657);
-    let lng = $state(10.4515);
-    let searchQuery = $state("");
-    let hasAttemptedGeolocation = $state(false);
+// Date handlers
+function nextDay() {
+    const d = new Date(date);
+    d.setDate(d.getDate() + 1);
+    date = d;
+}
 
-    // Date state
-    let date = $state(new Date());
-    let times = $derived(calculateTimes(lat, lng, date));
-
-    // Location handlers
-    async function getMyLocation() {
-        const location = await getLocation();
-        lat = location.latitude;
-        lng = location.longitude;
-        searchQuery = "";
-
-        try {
-            const places = await reverse(lat, lng, { limit: 1 });
-            place = places.length > 0 ? places[0].name : "Mein Standort";
-        } catch (error) {
-            console.error("Reverse geocoding error:", error);
-            place = "Mein Standort";
-        }
-    }
-
-    function handlePlaceSelect(selectedPlace: Place) {
-        place = selectedPlace.name;
-        lat = selectedPlace.lat;
-        lng = selectedPlace.lon;
-    }
-
-    // Auto-geolocate on page load
-    $effect(() => {
-        if (!hasAttemptedGeolocation) {
-            hasAttemptedGeolocation = true;
-            getMyLocation().catch((error) => {
-                console.log("Geolocation not available, using Germany as fallback:", error);
-            });
-        }
-    });
-
-    // Date handlers
-    function nextDay() {
-        const d = new Date(date);
-        d.setDate(d.getDate() + 1);
-        date = d;
-    }
-
-    function previousDay() {
-        const d = new Date(date);
-        d.setDate(d.getDate() - 1);
-        date = d;
-    }
+function previousDay() {
+    const d = new Date(date);
+    d.setDate(d.getDate() - 1);
+    date = d;
+}
 </script>
 
 <div class="min-h-screen bg-gray-100">

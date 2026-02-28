@@ -1,9 +1,8 @@
-import type {Feature, FeatureCollection, Point} from "geojson";
+import type { Feature, FeatureCollection, Point } from "geojson";
 
 const BASE_URL = "https://photon.komoot.io";
 const LANG = "de";
 const DEFAULT_LIMIT = 10;
-
 
 export type OsmType = "N" | "W" | "R";
 export type PlaceKind = "city" | "town" | "village" | "suburb" | "street" | "place";
@@ -52,7 +51,7 @@ export interface ReverseOptions {
 }
 
 export async function search(query: string, lat?: number, lon?: number, options: SearchOptions = {}): Promise<Place[]> {
-    const {limit = DEFAULT_LIMIT, signal} = options;
+    const { limit = DEFAULT_LIMIT, signal } = options;
 
     const url = new URL("/api", BASE_URL);
     url.searchParams.set("q", query);
@@ -65,11 +64,11 @@ export async function search(query: string, lat?: number, lon?: number, options:
     const places = await fetchPlaces(url, signal);
 
     // Filter to only keep actual places (not administrative boundaries, buildings, etc.)
-    return places.filter(place => place.raw.properties?.osm_key === "place");
+    return places.filter((place) => place.raw.properties?.osm_key === "place");
 }
 
 export async function reverse(lat: number, lon: number, options: ReverseOptions = {}): Promise<Place[]> {
-    const {limit = DEFAULT_LIMIT, signal} = options;
+    const { limit = DEFAULT_LIMIT, signal } = options;
 
     const url = new URL("/reverse", BASE_URL);
     url.searchParams.set("lat", String(lat));
@@ -81,12 +80,12 @@ export async function reverse(lat: number, lon: number, options: ReverseOptions 
 }
 
 async function fetchPlaces(url: URL, signal?: AbortSignal): Promise<Place[]> {
-    const response = await fetch(url, {signal, headers: {Accept: "application/json"}});
+    const response = await fetch(url, { signal, headers: { Accept: "application/json" } });
     if (!response.ok) {
         throw new Error(`Photon API error: HTTP ${response.status}`);
     }
 
-    const data = await response.json() as PhotonResponse;
+    const data = (await response.json()) as PhotonResponse;
     return data.features.map(toPlace);
 }
 
@@ -99,18 +98,20 @@ function toPlace(feature: PhotonFeature): Place {
     const context = buildContext(props);
     const displayName = buildDisplayName(name, props);
 
-    return {lat, lon, name, kind, context, displayName, raw: feature};
+    return { lat, lon, name, kind, context, displayName, raw: feature };
 }
 
 function determineName(props: PhotonProperties): string {
-    return props.name
-        || props.district
-        || props.suburb
-        || props.village
-        || props.town
-        || props.city
-        || props.street
-        || "Unbenannt";
+    return (
+        props.name ||
+        props.district ||
+        props.suburb ||
+        props.village ||
+        props.town ||
+        props.city ||
+        props.street ||
+        "Unbenannt"
+    );
 }
 
 function determineKind(props: PhotonProperties): PlaceKind | string {
@@ -149,7 +150,5 @@ function buildContext(props: PhotonProperties): string {
 }
 
 function buildDisplayName(name: string, props: PhotonProperties): string {
-    return [name, props.postcode, props.state, props.country]
-        .filter(Boolean)
-        .join(", ");
+    return [name, props.postcode, props.state, props.country].filter(Boolean).join(", ");
 }

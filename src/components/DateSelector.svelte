@@ -1,14 +1,14 @@
 <script lang="ts">
-    import { Card, Button, Heading, Datepicker } from 'flowbite-svelte';
-    import { CalendarMonthSolid, ChevronLeftOutline, ChevronRightOutline } from 'flowbite-svelte-icons';
+import { Button, Card, Datepicker, Heading } from "flowbite-svelte";
+import { CalendarMonthSolid, ChevronLeftOutline, ChevronRightOutline } from "flowbite-svelte-icons";
 
-    interface Props {
-        date: Date;
-        onPreviousDay: () => void;
-        onNextDay: () => void;
-    }
+interface Props {
+    date: Date;
+    onPreviousDay: () => void;
+    onNextDay: () => void;
+}
 
-    let { date = $bindable(), onPreviousDay, onNextDay }: Props = $props();
+let { date = $bindable(), onPreviousDay, onNextDay }: Props = $props();
 </script>
 
 <Card size="lg" class="shadow-lg border-2 border-gray-200 bg-white p-4 sm:p-6">

@@ -9,7 +9,7 @@ export function getLocation(): Promise<Location> {
     const options = {
         enableHighAccuracy: false,
         timeout: TIMEOUT,
-        maximumAge: 2 * TIMEOUT,
+        maximumAge: 2 * TIMEOUT
     };
 
     return new Promise((resolve, reject) => {
@@ -24,6 +24,6 @@ export function getLocation(): Promise<Location> {
 function positionToLocation(position: GeolocationPosition): Location {
     return {
         latitude: position.coords.latitude,
-        longitude: position.coords.longitude,
+        longitude: position.coords.longitude
     };
 }

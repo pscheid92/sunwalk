@@ -1,16 +1,16 @@
 <script lang="ts">
-    import { Card, Heading } from 'flowbite-svelte';
-    import type { Component, Snippet } from 'svelte';
+import { Card, Heading } from "flowbite-svelte";
+import type { Component, Snippet } from "svelte";
 
-    interface Props {
-        title: string;
-        icon: Component;
-        iconGradient: string;
-        borderColor: string;
-        children: Snippet;
-    }
+interface Props {
+    title: string;
+    icon: Component;
+    iconGradient: string;
+    borderColor: string;
+    children: Snippet;
+}
 
-    let { title, icon: Icon, iconGradient, borderColor, children }: Props = $props();
+let { title, icon: Icon, iconGradient, borderColor, children }: Props = $props();
 </script>
 
 <Card size="lg" class="shadow-lg border-2 {borderColor} bg-white p-4 sm:p-6">

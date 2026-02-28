@@ -1,62 +1,62 @@
 <script lang="ts">
-    import {search, type Place} from "../lib/photon";
-    import { Input, Spinner } from 'flowbite-svelte';
-    import { SearchSolid, MapPinAltSolid } from 'flowbite-svelte-icons';
+import { Input, Spinner } from "flowbite-svelte";
+import { MapPinAltSolid, SearchSolid } from "flowbite-svelte-icons";
+import { type Place, search } from "../lib/photon";
 
-    interface Props {
-        onSelect: (place: Place) => void;
-        query?: string;
-    }
+interface Props {
+    onSelect: (place: Place) => void;
+    query?: string;
+}
 
-    let {onSelect, query = $bindable("")}: Props = $props();
-    let results = $state<Place[]>([]);
-    let isSearching = $state(false);
-    let showResults = $state(false);
-    let debounceTimer: number | undefined = $state(undefined);
+let { onSelect, query = $bindable("") }: Props = $props();
+let results = $state<Place[]>([]);
+let isSearching = $state(false);
+let showResults = $state(false);
+let debounceTimer: number | undefined = $state(undefined);
 
-    async function performSearch(searchQuery: string) {
-        if (searchQuery.trim().length < 2) {
-            results = [];
-            return;
-        }
-
-        isSearching = true;
-        try {
-            results = await search(searchQuery);
-        } catch (error) {
-            console.error("Search error:", error);
-            results = [];
-        } finally {
-            isSearching = false;
-        }
-    }
-
-    function handleInput(event: Event) {
-        const target = event.target as HTMLInputElement;
-        query = target.value;
-        showResults = true;
-
-        if (debounceTimer) {
-            clearTimeout(debounceTimer);
-        }
-
-        debounceTimer = setTimeout(() => {
-            performSearch(query);
-        }, 300);
-    }
-
-    function selectPlace(place: Place) {
-        query = place.name;
-        showResults = false;
+async function performSearch(searchQuery: string) {
+    if (searchQuery.trim().length < 2) {
         results = [];
-        onSelect(place);
+        return;
     }
 
-    function handleBlur() {
-        setTimeout(() => {
-            showResults = false;
-        }, 200);
+    isSearching = true;
+    try {
+        results = await search(searchQuery);
+    } catch (error) {
+        console.error("Search error:", error);
+        results = [];
+    } finally {
+        isSearching = false;
     }
+}
+
+function handleInput(event: Event) {
+    const target = event.target as HTMLInputElement;
+    query = target.value;
+    showResults = true;
+
+    if (debounceTimer) {
+        clearTimeout(debounceTimer);
+    }
+
+    debounceTimer = setTimeout(() => {
+        performSearch(query);
+    }, 300);
+}
+
+function selectPlace(place: Place) {
+    query = place.name;
+    showResults = false;
+    results = [];
+    onSelect(place);
+}
+
+function handleBlur() {
+    setTimeout(() => {
+        showResults = false;
+    }, 200);
+}
 </script>
 
 <div class="relative w-full">
@@ -69,7 +69,9 @@
         onfocus={() => showResults = query.length >= 2}
         size="lg"
     >
-        <SearchSolid slot="left" class="w-5 h-5 text-gray-500" />
+        {#snippet left()}
+            <SearchSolid class="w-5 h-5 text-gray-500" />
+        {/snippet}
     </Input>
 
     {#if showResults && (results.length > 0 || isSearching)}

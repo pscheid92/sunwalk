@@ -1,20 +1,21 @@
 <script lang="ts">
-    import type { Component } from 'svelte';
+import type { Component } from "svelte";
 
-    interface Props {
-        icon: Component;
-        iconColor: string;
-        label: string;
-        time: string;
-        highlighted?: boolean;
-        backgroundColor?: string;
-    }
+interface Props {
+    icon: Component;
+    iconColor: string;
+    label: string;
+    time: string;
+    highlighted?: boolean;
+    backgroundColor?: string;
+}
 
-    let { icon: Icon, iconColor, label, time, highlighted = false, backgroundColor = "bg-white" }: Props = $props();
+let { icon: Icon, iconColor, label, time, highlighted = false, backgroundColor = "bg-white" }: Props = $props();
 
-    const baseClasses = "flex items-center justify-between p-3 sm:p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow";
-    const highlightClasses = highlighted ? "border-2 border-orange-200" : "";
-    const bgClasses = backgroundColor;
+const baseClasses =
+    "flex items-center justify-between p-3 sm:p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow";
+const highlightClasses = highlighted ? "border-2 border-orange-200" : "";
+const bgClasses = backgroundColor;
 </script>
 
 <div class="{baseClasses} {bgClasses} {highlightClasses}">

@@ -11,7 +11,7 @@ export const ICON_COLORS = {
     sunset: "text-orange-500",
     goldenHour: "text-yellow-500",
     day: "text-gray-400",
-    night: "text-indigo-600",
+    night: "text-indigo-600"
 } as const;
 
 // Background colors for time entry cards
@@ -20,12 +20,12 @@ export const BACKGROUND_COLORS = {
     sunrise: "bg-gradient-to-r from-orange-50 to-amber-50",
     sunset: "bg-gradient-to-r from-orange-50 to-pink-50",
     goldenHour: "bg-gradient-to-r from-yellow-50 to-orange-50",
-    night: "bg-gradient-to-r from-indigo-50 to-blue-50",
+    night: "bg-gradient-to-r from-indigo-50 to-blue-50"
 } as const;
 
 // Default location (center of Germany)
 export const DEFAULT_LOCATION = {
     name: "Deutschland",
     lat: 51.1657,
-    lng: 10.4515,
+    lng: 10.4515
 } as const;

@@ -1,19 +1,19 @@
 <script lang="ts">
-    import { Card, Button, Heading } from 'flowbite-svelte';
-    import { MapPinAltSolid } from 'flowbite-svelte-icons';
-    import SearchBox from './SearchBox.svelte';
-    import type { Place } from '../lib/photon';
+import { Button, Card, Heading } from "flowbite-svelte";
+import { MapPinAltSolid } from "flowbite-svelte-icons";
+import type { Place } from "../lib/photon";
+import SearchBox from "./SearchBox.svelte";
 
-    interface Props {
-        place: string;
-        lat: number;
-        lng: number;
-        searchQuery: string;
-        onPlaceSelect: (place: Place) => void;
-        onLocationClick: () => void;
-    }
+interface Props {
+    place: string;
+    lat: number;
+    lng: number;
+    searchQuery: string;
+    onPlaceSelect: (place: Place) => void;
+    onLocationClick: () => void;
+}
 
-    let { place, lat, lng, searchQuery = $bindable(), onPlaceSelect, onLocationClick }: Props = $props();
+let { place, lat, lng, searchQuery = $bindable(), onPlaceSelect, onLocationClick }: Props = $props();
 </script>
 
 <Card size="lg" class="shadow-lg border-2 border-gray-200 bg-white p-4 sm:p-6">

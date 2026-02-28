@@ -1,4 +1,4 @@
-import * as SunCalc from 'suncalc';
+import * as SunCalc from "suncalc";
 
 export interface Times {
     astronomicalDawn: Date;
@@ -40,6 +40,6 @@ export function calculateTimes(latitude: number, longitude: number, date: Date):
         nauticalDusk: times.nauticalDusk,
         astronomicalDusk: times.night,
 
-        nadir: times.nadir,
+        nadir: times.nadir
     };
 }
