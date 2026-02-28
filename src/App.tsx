@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import HeroTimes from "./components/HeroTimes";
 import TimesPanel from "./components/TimesPanel";
 import TopBar from "./components/TopBar";
 import { getLocation } from "./lib/location";
@@ -93,15 +92,7 @@ export default function App() {
                     onNextDay={nextDay}
                 />
 
-                <HeroTimes
-                    sunrise={formatTime(times.sunriseStart)}
-                    solarNoon={formatTime(times.solarNoon)}
-                    sunset={formatTime(times.sunsetStart)}
-                    goldenHourMorningEnd={formatTime(times.sunriseEnd)}
-                    goldenHourEveningStart={formatTime(times.goldenHourStart)}
-                />
-
-                <TimesPanel times={times} formatTime={formatTime} />
+                <TimesPanel times={times} date={date} formatTime={formatTime} />
 
                 <footer className="text-center py-6 text-xs text-slate-600">SunCalc &bull; Photon API</footer>
             </div>
