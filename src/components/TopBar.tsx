@@ -40,51 +40,55 @@ export default function TopBar({
     onNextDay
 }: TopBarProps) {
     return (
-        <div className="flex flex-col gap-3 py-4">
-            {/* Row 1: Brand + Place + Search + GPS */}
-            <div className="flex flex-col sm:flex-row sm:items-center gap-3">
-                <div className="flex items-center gap-2 flex-shrink-0">
-                    <Sun className="w-5 h-5 text-amber-400" />
-                    <span className="text-lg font-bold text-slate-100">Sunwalk</span>
-                    <span className="text-slate-600 mx-1">&mdash;</span>
-                    <span className="text-sm text-slate-400 truncate">{place}</span>
+        <div className="flex flex-col gap-3 pt-[calc(0.75rem+env(safe-area-inset-top))] pb-3 sm:py-4">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+                <div className="min-w-0">
+                    <div className="flex min-w-0 items-center gap-2">
+                        <Sun className="h-5 w-5 flex-shrink-0 text-amber-400" />
+                        <span className="text-lg font-bold text-slate-100">Sunwalk</span>
+                        <span className="hidden text-slate-600 sm:inline">&bull;</span>
+                        <span className="hidden min-w-0 truncate text-sm text-slate-400 sm:block">{place}</span>
+                    </div>
+                    <div className="mt-1 truncate text-sm text-slate-400 sm:hidden">{place}</div>
                 </div>
 
-                <div className="flex items-center gap-2 flex-1 min-w-0">
+                <div className="grid min-w-0 flex-1 grid-cols-[minmax(0,1fr)_2.75rem] items-center gap-2">
                     <SearchBox query={searchQuery} onQueryChange={onSearchQueryChange} onSelect={onPlaceSelect} />
                     <button
                         type="button"
-                        className="p-2 rounded-lg border border-slate-700 text-slate-400 hover:text-amber-400 hover:border-amber-500/50 transition-colors disabled:opacity-50 flex-shrink-0"
+                        className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-lg border border-slate-700 text-slate-400 transition-colors hover:border-amber-500/50 hover:text-amber-400 disabled:opacity-50"
                         onClick={onLocationClick}
                         disabled={isLocating}
                         title="Standort bestimmen"
+                        aria-label="Standort bestimmen"
                     >
-                        {isLocating ? <Loader2 className="w-4 h-4 animate-spin" /> : <MapPin className="w-4 h-4" />}
+                        {isLocating ? <Loader2 className="h-4 w-4 animate-spin" /> : <MapPin className="h-4 w-4" />}
                     </button>
                 </div>
             </div>
 
-            {/* Row 2: Date navigation */}
-            <div className="flex items-center gap-2 justify-center sm:justify-end">
+            <div className="grid grid-cols-[2.75rem_minmax(0,1fr)_2.75rem] items-center gap-2 sm:flex sm:justify-end">
                 <button
                     type="button"
-                    className="p-1.5 rounded text-slate-400 hover:text-slate-200 transition-colors"
+                    className="flex h-11 w-11 items-center justify-center rounded-lg border border-slate-800 text-slate-400 transition-colors hover:border-slate-700 hover:text-slate-200"
                     onClick={onPreviousDay}
+                    aria-label="Vorheriger Tag"
                 >
-                    <ChevronLeft className="w-4 h-4" />
+                    <ChevronLeft className="h-4 w-4" />
                 </button>
                 <input
                     type="date"
                     value={toDateString(date)}
                     onChange={(e) => onDateChange(fromDateString(e.target.value))}
-                    className="py-1 px-2 text-sm text-slate-200 border border-slate-700 rounded bg-slate-900 focus:ring-amber-500 focus:border-amber-500"
+                    className="h-11 min-w-0 rounded-lg border border-slate-700 bg-slate-900 px-3 text-base text-slate-200 focus:border-amber-500 focus:ring-amber-500 sm:w-auto sm:text-sm"
                 />
                 <button
                     type="button"
-                    className="p-1.5 rounded text-slate-400 hover:text-slate-200 transition-colors"
+                    className="flex h-11 w-11 items-center justify-center rounded-lg border border-slate-800 text-slate-400 transition-colors hover:border-slate-700 hover:text-slate-200"
                     onClick={onNextDay}
+                    aria-label="Nächster Tag"
                 >
-                    <ChevronRight className="w-4 h-4" />
+                    <ChevronRight className="h-4 w-4" />
                 </button>
             </div>
         </div>

@@ -78,7 +78,7 @@ export default function App() {
 
     return (
         <div className="min-h-screen bg-slate-950 text-slate-200">
-            <div className="w-full max-w-3xl mx-auto px-4">
+            <div className="mx-auto w-full max-w-3xl px-3 pb-[max(6rem,25dvh)] sm:px-4 sm:pb-0">
                 <TopBar
                     place={place}
                     date={date}
@@ -92,9 +92,13 @@ export default function App() {
                     onNextDay={nextDay}
                 />
 
-                <TimesPanel times={times} date={date} formatTime={formatTime} />
+                <main className="pb-3">
+                    <TimesPanel times={times} date={date} formatTime={formatTime} />
+                </main>
 
-                <footer className="text-center py-6 text-xs text-slate-600">SunCalc &bull; Photon API</footer>
+                <footer className="pt-1 pb-[calc(1rem+env(safe-area-inset-bottom))] text-center text-xs text-slate-600">
+                    SunCalc &bull; Photon API
+                </footer>
             </div>
         </div>
     );

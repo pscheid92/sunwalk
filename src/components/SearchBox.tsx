@@ -72,12 +72,12 @@ export default function SearchBox({ query, onQueryChange, onSelect }: SearchBoxP
                     onChange={handleInput}
                     onBlur={handleBlur}
                     onFocus={() => setShowResults(query.length >= 2)}
-                    className="block w-full py-2 pl-9 pr-3 text-sm text-slate-200 border border-slate-700 rounded-lg bg-slate-900 focus:ring-amber-500 focus:border-amber-500 placeholder-slate-500"
+                    className="block h-11 w-full rounded-lg border border-slate-700 bg-slate-900 py-2 pl-9 pr-3 text-base text-slate-200 placeholder-slate-500 focus:border-amber-500 focus:ring-amber-500 sm:text-sm"
                 />
             </div>
 
             {showResults && (results.length > 0 || isSearching) && (
-                <div className="absolute top-full left-0 right-0 mt-1 bg-slate-800 border border-slate-700 rounded-lg shadow-xl max-h-80 overflow-y-auto z-50">
+                <div className="absolute top-full right-0 left-0 z-50 mt-1 max-h-[min(20rem,calc(100dvh-12rem))] overflow-y-auto rounded-lg border border-slate-700 bg-slate-800 shadow-xl">
                     {isSearching ? (
                         <div className="flex items-center gap-3 px-4 py-3 text-slate-400">
                             <svg
@@ -108,13 +108,15 @@ export default function SearchBox({ query, onQueryChange, onSelect }: SearchBoxP
                             <button
                                 key={place.displayName}
                                 type="button"
-                                className="w-full text-left px-4 py-2.5 hover:bg-slate-700 border-b border-slate-700 last:border-b-0 transition-colors focus:outline-none focus:bg-slate-700"
+                                className="w-full border-b border-slate-700 px-4 py-3 text-left transition-colors last:border-b-0 hover:bg-slate-700 focus:bg-slate-700 focus:outline-none sm:py-2.5"
                                 onMouseDown={() => selectPlace(place)}
                             >
                                 <div className="flex items-start gap-3">
-                                    <MapPin className="w-4 h-4 text-amber-500 mt-0.5 flex-shrink-0" />
+                                    <MapPin className="mt-0.5 h-4 w-4 flex-shrink-0 text-amber-500" />
                                     <div className="flex-1 min-w-0">
-                                        <div className="text-sm font-medium text-slate-200">{place.displayName}</div>
+                                        <div className="break-words text-sm font-medium text-slate-200">
+                                            {place.displayName}
+                                        </div>
                                         <div className="text-xs text-slate-500 mt-0.5 truncate">{place.context}</div>
                                     </div>
                                 </div>

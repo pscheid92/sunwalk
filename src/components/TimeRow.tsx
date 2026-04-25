@@ -9,17 +9,17 @@ interface TimeRowProps {
 export default function TimeRow({ dotColor, label, time, duration, isActive }: TimeRowProps) {
     return (
         <div
-            className={`grid grid-cols-[1fr_auto_auto] items-baseline gap-x-2 py-1.5 ${isActive ? "bg-slate-800/50 -mx-2 px-2 rounded" : ""}`}
+            className={`grid grid-cols-[minmax(0,1fr)_auto_auto] items-baseline gap-x-2 py-2 sm:py-1.5 ${isActive ? "-mx-2 rounded-md bg-slate-800/50 px-2" : ""}`}
         >
-            <div className="flex items-center gap-2 min-w-0">
-                <span className={`inline-block w-2 h-2 rounded-full shrink-0 ${dotColor}`} />
+            <div className="flex min-w-0 items-center gap-2">
+                <span className={`inline-block h-2 w-2 shrink-0 rounded-full ${dotColor}`} />
                 <span className={`text-sm truncate ${isActive ? "text-slate-100 font-medium" : "text-slate-300"}`}>
                     {label}
                 </span>
             </div>
-            <span className="text-sm font-mono text-slate-100 tabular-nums text-right">{time}</span>
+            <span className="text-right font-mono text-sm tabular-nums text-slate-100">{time}</span>
             <span
-                className={`text-xs tabular-nums text-right whitespace-nowrap w-20 ${isActive ? "text-amber-400" : "text-slate-500"}`}
+                className={`w-16 text-right text-xs tabular-nums whitespace-nowrap sm:w-20 ${isActive ? "text-amber-400" : "text-slate-500"}`}
             >
                 {duration}
             </span>

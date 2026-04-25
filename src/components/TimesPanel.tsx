@@ -72,7 +72,7 @@ export default function TimesPanel({ times, date, formatTime }: TimesPanelProps)
     }
 
     return (
-        <div className="bg-slate-900/80 border border-slate-800 rounded-lg p-4">
+        <div className="rounded-lg border border-slate-800 bg-slate-900/80 p-3 sm:p-4">
             <div className="grid grid-cols-1 md:grid-cols-2 md:divide-x md:divide-slate-800">
                 <div className="md:pr-4 pb-4 md:pb-0">
                     <h3 className="text-xs uppercase tracking-wider text-amber-500/80 font-semibold mb-2">Morgens</h3>

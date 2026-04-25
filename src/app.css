@@ -16,6 +16,19 @@
 }
 
 @layer base {
+    html,
+    body,
+    #app {
+        min-height: 100%;
+    }
+
+    body {
+        background: #020617;
+        overflow-y: auto;
+        overscroll-behavior-y: contain;
+        -webkit-overflow-scrolling: touch;
+    }
+
     /* Dark date input fix */
     input[type="date"]::-webkit-calendar-picker-indicator {
         filter: invert(1);
