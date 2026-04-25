@@ -18,10 +18,16 @@ export interface Times {
     astronomicalDusk: Date;
 
     nadir: Date;
+    nextAstronomicalDawn: Date;
 }
 
 export function calculateTimes(latitude: number, longitude: number, date: Date): Times {
-    const times = SunCalc.getTimes(date, latitude, longitude);
+    let solarDate = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 12);
+    let nextSolarDate = new Date(solarDate);
+    nextSolarDate.setDate(nextSolarDate.getDate() + 1);
+
+    const times = SunCalc.getTimes(solarDate, latitude, longitude);
+    const nextTimes = SunCalc.getTimes(nextSolarDate, latitude, longitude);
 
     return {
         astronomicalDawn: times.nightEnd,
@@ -40,6 +46,7 @@ export function calculateTimes(latitude: number, longitude: number, date: Date):
         nauticalDusk: times.nauticalDusk,
         astronomicalDusk: times.night,
 
-        nadir: times.nadir
+        nadir: times.nadir,
+        nextAstronomicalDawn: nextTimes.nightEnd
     };
 }

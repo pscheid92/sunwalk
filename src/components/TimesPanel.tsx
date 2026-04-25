@@ -66,8 +66,7 @@ export default function TimesPanel({ times, date, formatTime }: TimesPanelProps)
     let nightActive = today && isValidTime(times.astronomicalDusk) && now >= times.astronomicalDusk;
     let nightDuration: string | undefined;
     if (nightActive) {
-        let nextDawn = new Date(times.astronomicalDawn.getTime() + 24 * 60 * 60_000);
-        let remaining = Math.ceil((nextDawn.getTime() - now.getTime()) / 60_000);
+        let remaining = Math.ceil((times.nextAstronomicalDawn.getTime() - now.getTime()) / 60_000);
         nightDuration = `noch ${formatDuration(remaining)}`;
     }
 
